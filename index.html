@@ -9,372 +9,67 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
     :root {
-      --bg:          #F8F9FB;
-      --surface:     #FFFFFF;
-      --navy:        #1B2A4A;
-      --navy-muted:  #4A5568;
-      --teal:        #2D9B8A;
-      --teal-light:  #E6F4F2;
-      --border:      #E2E8F0;
-      --amber:       #D97706;
-      --amber-light: #FEF3C7;
-      --red-light:   #FEE2E2;
-      --red:         #DC2626;
-      --green-light: #DCFCE7;
-      --green:       #16A34A;
-      --radius:      8px;
-      --shadow:      0 1px 3px rgba(0,0,0,0.08), 0 1px 2px rgba(0,0,0,0.04);
+      --bg: #F8F9FB; --surface: #FFFFFF; --navy: #1B2A4A; --navy-muted: #4A5568;
+      --teal: #2D9B8A; --teal-light: #E6F4F2; --border: #E2E8F0;
+      --amber: #D97706; --amber-light: #FEF3C7;
+      --red-light: #FEE2E2; --red: #DC2626;
+      --green-light: #DCFCE7; --green: #16A34A;
+      --radius: 8px; --shadow: 0 1px 3px rgba(0,0,0,0.08);
     }
-
-    body {
-      font-family: 'Inter', system-ui, sans-serif;
-      background: var(--bg);
-      color: var(--navy);
-      min-height: 100vh;
-      font-size: 14px;
-      line-height: 1.6;
-    }
-
-    /* ── Header ── */
-    header {
-      background: var(--navy);
-      padding: 14px 24px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-    }
-
-    .logo {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      color: #fff;
-      font-size: 16px;
-      font-weight: 600;
-      letter-spacing: -0.3px;
-    }
-
-    .logo-mark {
-      width: 28px;
-      height: 28px;
-      background: var(--teal);
-      border-radius: 6px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-
+    body { font-family: 'Inter', sans-serif; background: var(--bg); color: var(--navy); min-height: 100vh; font-size: 14px; line-height: 1.6; }
+    header { background: var(--navy); padding: 14px 24px; display: flex; align-items: center; justify-content: space-between; }
+    .logo { display: flex; align-items: center; gap: 8px; color: #fff; font-size: 16px; font-weight: 600; }
+    .logo-mark { width: 28px; height: 28px; background: var(--teal); border-radius: 6px; display: flex; align-items: center; justify-content: center; }
     .logo-mark svg { width: 16px; height: 16px; fill: none; stroke: #fff; stroke-width: 2; }
-
-    .badge {
-      background: rgba(255,255,255,0.1);
-      color: rgba(255,255,255,0.75);
-      font-size: 11px;
-      font-weight: 500;
-      padding: 3px 9px;
-      border-radius: 20px;
-      border: 1px solid rgba(255,255,255,0.15);
-    }
-
-    /* ── Zero retention banner ── */
-    .trust-bar {
-      background: var(--teal-light);
-      border-bottom: 1px solid #B2DDD8;
-      padding: 7px 24px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 6px;
-      font-size: 12px;
-      color: #1A5C54;
-      font-weight: 500;
-    }
-
+    .badge { background: rgba(255,255,255,0.1); color: rgba(255,255,255,0.75); font-size: 11px; font-weight: 500; padding: 3px 9px; border-radius: 20px; border: 1px solid rgba(255,255,255,0.15); }
+    .trust-bar { background: var(--teal-light); border-bottom: 1px solid #B2DDD8; padding: 7px 24px; display: flex; align-items: center; justify-content: center; gap: 6px; font-size: 12px; color: #1A5C54; font-weight: 500; }
     .trust-bar svg { width: 13px; height: 13px; flex-shrink: 0; }
-
-    /* ── Layout ── */
-    .workspace {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 0;
-      height: calc(100vh - 82px);
-    }
-
-    .panel {
-      padding: 24px;
-      overflow-y: auto;
-    }
-
-    .panel-left {
-      border-right: 1px solid var(--border);
-    }
-
-    /* ── Panel headings ── */
-    .panel-heading {
-      font-size: 11px;
-      font-weight: 600;
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
-      color: var(--navy-muted);
-      margin-bottom: 14px;
-    }
-
-    /* ── Format selector ── */
-    .format-row {
-      display: flex;
-      gap: 8px;
-      margin-bottom: 16px;
-    }
-
-    .format-btn {
-      flex: 1;
-      padding: 9px 0;
-      border: 1.5px solid var(--border);
-      background: var(--surface);
-      border-radius: var(--radius);
-      font-family: inherit;
-      font-size: 13px;
-      font-weight: 500;
-      color: var(--navy-muted);
-      cursor: pointer;
-      transition: all 0.15s;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 2px;
-    }
-
+    .workspace { display: grid; grid-template-columns: 1fr 1fr; height: calc(100vh - 82px); }
+    .panel { padding: 24px; overflow-y: auto; }
+    .panel-left { border-right: 1px solid var(--border); }
+    .panel-heading { font-size: 11px; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: var(--navy-muted); margin-bottom: 14px; }
+    .format-row { display: flex; gap: 8px; margin-bottom: 16px; }
+    .format-btn { flex: 1; padding: 9px 0; border: 1.5px solid var(--border); background: var(--surface); border-radius: var(--radius); font-family: inherit; font-size: 13px; font-weight: 500; color: var(--navy-muted); cursor: pointer; transition: all 0.15s; display: flex; flex-direction: column; align-items: center; gap: 2px; }
     .format-btn span.fmt-label { font-size: 13px; font-weight: 600; color: var(--navy); }
     .format-btn span.fmt-sub { font-size: 11px; color: var(--navy-muted); }
-
-    .format-btn.active {
-      border-color: var(--teal);
-      background: var(--teal-light);
-      color: var(--teal);
-    }
-
+    .format-btn.active { border-color: var(--teal); background: var(--teal-light); }
     .format-btn.active span.fmt-label { color: var(--teal); }
-
-    /* ── Textarea ── */
-    .input-label {
-      font-size: 12px;
-      font-weight: 500;
-      color: var(--navy-muted);
-      margin-bottom: 6px;
-      display: block;
-    }
-
-    .bullets-area {
-      width: 100%;
-      min-height: 220px;
-      padding: 12px 14px;
-      border: 1.5px solid var(--border);
-      border-radius: var(--radius);
-      background: var(--surface);
-      font-family: 'Inter', sans-serif;
-      font-size: 14px;
-      line-height: 1.7;
-      color: var(--navy);
-      resize: vertical;
-      outline: none;
-      transition: border-color 0.15s;
-    }
-
+    .input-label { font-size: 12px; font-weight: 500; color: var(--navy-muted); margin-bottom: 6px; display: block; }
+    .bullets-area { width: 100%; min-height: 220px; padding: 12px 14px; border: 1.5px solid var(--border); border-radius: var(--radius); background: var(--surface); font-family: 'Inter', sans-serif; font-size: 14px; line-height: 1.7; color: var(--navy); resize: vertical; outline: none; transition: border-color 0.15s; }
     .bullets-area:focus { border-color: var(--teal); }
-
     .bullets-area::placeholder { color: #A0AEC0; }
-
-    .hint {
-      font-size: 11.5px;
-      color: #A0AEC0;
-      margin-top: 6px;
-    }
-
-    /* ── Generate button ── */
-    .generate-btn {
-      width: 100%;
-      margin-top: 18px;
-      padding: 13px;
-      background: var(--navy);
-      color: #fff;
-      border: none;
-      border-radius: var(--radius);
-      font-family: inherit;
-      font-size: 14px;
-      font-weight: 600;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 8px;
-      transition: background 0.15s, transform 0.1s;
-    }
-
+    .hint { font-size: 11.5px; color: #A0AEC0; margin-top: 6px; }
+    .generate-btn { width: 100%; margin-top: 18px; padding: 13px; background: var(--navy); color: #fff; border: none; border-radius: var(--radius); font-family: inherit; font-size: 14px; font-weight: 600; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; transition: background 0.15s; }
     .generate-btn:hover:not(:disabled) { background: #263f6d; }
-    .generate-btn:active:not(:disabled) { transform: scale(0.99); }
     .generate-btn:disabled { opacity: 0.6; cursor: not-allowed; }
-
-    .spinner {
-      width: 16px;
-      height: 16px;
-      border: 2px solid rgba(255,255,255,0.3);
-      border-top-color: #fff;
-      border-radius: 50%;
-      animation: spin 0.7s linear infinite;
-      display: none;
-    }
-
+    .spinner { width: 16px; height: 16px; border: 2px solid rgba(255,255,255,0.3); border-top-color: #fff; border-radius: 50%; animation: spin 0.7s linear infinite; display: none; }
     @keyframes spin { to { transform: rotate(360deg); } }
-
-    /* ── Output panel ── */
-    .output-empty {
-      height: 100%;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      gap: 12px;
-      color: #CBD5E1;
-      text-align: center;
-    }
-
+    .output-empty { height: 100%; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 12px; color: #CBD5E1; text-align: center; }
     .output-empty svg { width: 48px; height: 48px; }
     .output-empty p { font-size: 13px; max-width: 200px; line-height: 1.5; }
-
-    /* ── Generated note ── */
-    .note-output {
-      display: none;
-      animation: fadeUp 0.3s ease;
-    }
-
-    @keyframes fadeUp {
-      from { opacity: 0; transform: translateY(6px); }
-      to   { opacity: 1; transform: translateY(0); }
-    }
-
-    .note-actions {
-      display: flex;
-      gap: 8px;
-      margin-bottom: 16px;
-    }
-
-    .action-btn {
-      padding: 7px 14px;
-      border-radius: var(--radius);
-      font-family: inherit;
-      font-size: 12px;
-      font-weight: 500;
-      cursor: pointer;
-      border: 1.5px solid var(--border);
-      background: var(--surface);
-      color: var(--navy);
-      display: flex;
-      align-items: center;
-      gap: 6px;
-      transition: all 0.15s;
-    }
-
-    .action-btn:hover { background: var(--bg); border-color: #CBD5E1; }
+    .note-output { display: none; animation: fadeUp 0.3s ease; }
+    @keyframes fadeUp { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
+    .note-actions { display: flex; gap: 8px; margin-bottom: 16px; }
+    .action-btn { padding: 7px 14px; border-radius: var(--radius); font-family: inherit; font-size: 12px; font-weight: 500; cursor: pointer; border: 1.5px solid var(--border); background: var(--surface); color: var(--navy); display: flex; align-items: center; gap: 6px; transition: all 0.15s; }
+    .action-btn:hover { background: var(--bg); }
     .action-btn.copied { background: var(--green-light); border-color: var(--green); color: var(--green); }
-
     .action-btn svg { width: 13px; height: 13px; flex-shrink: 0; }
-
-    /* ── Clinical document frame ── */
-    .note-doc {
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-left: 3px solid var(--teal);
-      border-radius: var(--radius);
-      padding: 20px 22px;
-      box-shadow: var(--shadow);
-      font-family: Georgia, 'Times New Roman', serif;
-      font-size: 14px;
-      line-height: 1.8;
-      color: #2D3748;
-      white-space: pre-wrap;
-      margin-bottom: 16px;
-    }
-
-    /* ── Audit check ── */
-    .audit-section {
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: var(--radius);
-      overflow: hidden;
-      box-shadow: var(--shadow);
-    }
-
-    .audit-header {
-      padding: 11px 16px;
-      background: var(--amber-light);
-      border-bottom: 1px solid #FDE68A;
-      font-size: 12px;
-      font-weight: 600;
-      color: #92400E;
-      display: flex;
-      align-items: center;
-      gap: 7px;
-    }
-
+    .note-doc { background: var(--surface); border: 1px solid var(--border); border-left: 3px solid var(--teal); border-radius: var(--radius); padding: 20px 22px; font-family: Georgia, serif; font-size: 14px; line-height: 1.8; color: #2D3748; white-space: pre-wrap; margin-bottom: 16px; box-shadow: var(--shadow); }
+    .audit-section { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); overflow: hidden; box-shadow: var(--shadow); }
+    .audit-header { padding: 11px 16px; background: var(--amber-light); border-bottom: 1px solid #FDE68A; font-size: 12px; font-weight: 600; color: #92400E; display: flex; align-items: center; gap: 7px; }
     .audit-header svg { width: 14px; height: 14px; flex-shrink: 0; }
     .audit-header.pass { background: var(--green-light); border-bottom-color: #BBF7D0; color: #14532D; }
-
     .audit-items { padding: 10px 0; }
-
-    .audit-item {
-      display: flex;
-      align-items: flex-start;
-      gap: 10px;
-      padding: 7px 16px;
-      font-size: 13px;
-    }
-
-    .audit-dot {
-      width: 8px;
-      height: 8px;
-      border-radius: 50%;
-      margin-top: 5px;
-      flex-shrink: 0;
-    }
-
-    .audit-dot.ok   { background: var(--green); }
+    .audit-item { display: flex; align-items: flex-start; gap: 10px; padding: 7px 16px; font-size: 13px; }
+    .audit-dot { width: 8px; height: 8px; border-radius: 50%; margin-top: 5px; flex-shrink: 0; }
+    .audit-dot.ok { background: var(--green); }
     .audit-dot.warn { background: var(--amber); }
     .audit-dot.fail { background: var(--red); }
-
-    .audit-item-text strong {
-      display: block;
-      font-size: 12px;
-      font-weight: 600;
-      color: var(--navy);
-    }
-
-    .audit-item-text span {
-      font-size: 11.5px;
-      color: var(--navy-muted);
-    }
-
-    /* ── Error state ── */
-    .error-box {
-      background: var(--red-light);
-      border: 1px solid #FCA5A5;
-      border-radius: var(--radius);
-      padding: 12px 16px;
-      font-size: 13px;
-      color: var(--red);
-      display: none;
-      margin-top: 14px;
-    }
-
-    /* ── Responsive ── */
-    @media (max-width: 768px) {
-      .workspace {
-        grid-template-columns: 1fr;
-        height: auto;
-      }
-      .panel-left { border-right: none; border-bottom: 1px solid var(--border); }
-    }
+    .audit-item-text strong { display: block; font-size: 12px; font-weight: 600; color: var(--navy); }
+    .audit-item-text span { font-size: 11.5px; color: var(--navy-muted); }
+    .error-box { background: var(--red-light); border: 1px solid #FCA5A5; border-radius: var(--radius); padding: 12px 16px; font-size: 13px; color: var(--red); display: none; margin-top: 14px; }
+    @media (max-width: 768px) { .workspace { grid-template-columns: 1fr; height: auto; } .panel-left { border-right: none; border-bottom: 1px solid var(--border); } }
   </style>
 </head>
 <body>
@@ -397,47 +92,29 @@
 </div>
 
 <div class="workspace">
-
-  <!-- LEFT: Input panel -->
   <div class="panel panel-left">
     <p class="panel-heading">Session Input</p>
-
     <div class="format-row">
-      <button class="format-btn active" data-fmt="SOAP" onclick="selectFormat(this)">
+      <button class="format-btn active" id="btnSOAP" onclick="selectFormat('SOAP')">
         <span class="fmt-label">SOAP</span>
         <span class="fmt-sub">Subj · Obj · Assess · Plan</span>
       </button>
-      <button class="format-btn" data-fmt="DAP" onclick="selectFormat(this)">
+      <button class="format-btn" id="btnDAP" onclick="selectFormat('DAP')">
         <span class="fmt-label">DAP</span>
         <span class="fmt-sub">Data · Assess · Plan</span>
       </button>
     </div>
-
     <label class="input-label" for="bullets">Session bullet points</label>
-    <textarea
-      id="bullets"
-      class="bullets-area"
-      placeholder="• Client reported increased anxiety before work meetings
-• Practiced box breathing during session, reduced distress 7→3/10
-• Discussed CBT thought records, homework assigned
-• Mood: dysthymic, affect: congruent, no SI/HI
-• Plan: continue CBT, follow up on sleep hygiene next week"
-      spellcheck="true"
-    ></textarea>
-
+    <textarea id="bullets" class="bullets-area" placeholder="client reported increased anxiety before work meetings&#10;practiced box breathing, reduced distress 7 to 3/10&#10;discussed CBT thought records, homework assigned&#10;mood dysthymic, affect congruent, no SI/HI&#10;plan continue CBT, follow up on sleep hygiene next week" spellcheck="true"></textarea>
     <p class="hint">One bullet per observation. Clinical shorthand is fine.</p>
-
     <div id="errorBox" class="error-box"></div>
-
     <button class="generate-btn" id="generateBtn" onclick="generateNote()">
       <div class="spinner" id="spinner"></div>
       <span id="btnText">Generate Clinical Note</span>
     </button>
   </div>
 
-  <!-- RIGHT: Output panel -->
-  <div class="panel panel-right" id="outputPanel">
-
+  <div class="panel" id="outputPanel">
     <div class="output-empty" id="emptyState">
       <svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.5">
         <rect x="8" y="6" width="32" height="38" rx="3"/>
@@ -445,214 +122,97 @@
       </svg>
       <p>Your generated note will appear here</p>
     </div>
-
     <div class="note-output" id="noteOutput">
       <p class="panel-heading" id="noteHeading">Generated Note</p>
-
       <div class="note-actions">
         <button class="action-btn" id="copyBtn" onclick="copyNote()">
-          <svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.8">
-            <rect x="5" y="5" width="8" height="8" rx="1.5"/>
-            <path d="M9 5V3a1 1 0 0 0-1-1H3a1 1 0 0 0-1 1v5a1 1 0 0 0 1 1h2" stroke-linecap="round"/>
-          </svg>
+          <svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="5" y="5" width="8" height="8" rx="1.5"/><path d="M9 5V3a1 1 0 0 0-1-1H3a1 1 0 0 0-1 1v5a1 1 0 0 0 1 1h2" stroke-linecap="round"/></svg>
           Copy note
         </button>
         <button class="action-btn" onclick="resetAll()">
-          <svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.8">
-            <path d="M2 7a5 5 0 1 0 1-3H1V1" stroke-linecap="round" stroke-linejoin="round"/>
-          </svg>
+          <svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M2 7a5 5 0 1 0 1-3H1V1" stroke-linecap="round" stroke-linejoin="round"/></svg>
           New note
         </button>
       </div>
-
       <div class="note-doc" id="noteDoc"></div>
-
       <div class="audit-section" id="auditSection"></div>
     </div>
-
   </div>
 </div>
 
 <script>
-  // ── State ──────────────────────────────────────────────────────────────────
-  let currentFormat = 'SOAP';
-  let generatedNoteText = '';
+  var currentFormat = 'SOAP';
+  var generatedNoteText = '';
 
-  // ── Format toggle ──────────────────────────────────────────────────────────
-  function selectFormat(btn) {
-    document.querySelectorAll('.format-btn').forEach(b => b.classList.remove('active'));
-    btn.classList.add('active');
-    currentFormat = btn.dataset.fmt;
+  function selectFormat(fmt) {
+    currentFormat = fmt;
+    document.getElementById('btnSOAP').classList.toggle('active', fmt === 'SOAP');
+    document.getElementById('btnDAP').classList.toggle('active', fmt === 'DAP');
   }
 
-  // ── Generate ───────────────────────────────────────────────────────────────
-  async function generateNote() {
-    const bullets = document.getElementById('bullets').value.trim();
-    if (!bullets) {
-      showError('Please enter at least a few session bullet points.');
-      return;
-    }
-
+  function generateNote() {
+    var bullets = document.getElementById('bullets').value.trim();
+    if (!bullets) { showError('Please enter at least a few session bullet points.'); return; }
     setLoading(true);
     hideError();
 
-    try {
-      const response = await fetch('/api/generate', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ bullets, format: currentFormat })
-      });
-
-      const data = await response.json();
-
-      if (!response.ok) {
-        throw new Error(data?.error || `API error ${response.status}`);
-      }
-
-      if (!data.note) throw new Error('No content returned.');
-
+    fetch('/api/generate', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ bullets: bullets, format: currentFormat })
+    })
+    .then(function(res) { return res.json(); })
+    .then(function(data) {
+      if (data.error) { showError('Generation failed: ' + data.error); return; }
+      if (!data.note) { showError('No content returned. Please try again.'); return; }
       generatedNoteText = data.note;
-      renderOutput(data.note, data.audit || [], currentFormat);
-
-    } catch (err) {
-      showError('Generation failed: ' + err.message);
-    } finally {
+      renderOutput(data.note, data.audit || []);
+    })
+    .catch(function(err) {
+      showError('Request failed: ' + err.message);
+    })
+    .finally(function() {
       setLoading(false);
-    }
+    });
   }
 
-  // ── Prompt builder ─────────────────────────────────────────────────────────
-  function buildPrompt(bullets, format) {
-    const formatInstructions = format === 'SOAP'
-      ? `SOAP format with four labeled sections:
-         - Subjective: client's reported experience, feelings, concerns
-         - Objective: clinician's observations, measurable data, test results
-         - Assessment: clinical formulation, diagnosis impression, progress
-         - Plan: treatment plan, interventions, homework, next session focus`
-      : `DAP format with three labeled sections:
-         - Data: both subjective reports and objective observations combined
-         - Assessment: clinical formulation, diagnosis impression, progress
-         - Plan: treatment plan, interventions, homework, next session focus`;
-
-    return `You are an expert licensed clinical supervisor helping a therapist write a professional, insurance-compliant progress note.
-
-Given these session bullet points, generate a complete clinical note in ${format} format, then perform an audit readiness check.
-
-SESSION BULLET POINTS:
-${bullets}
-
-INSTRUCTIONS:
-1. Write a complete ${format} progress note. Use ${formatInstructions}
-2. Write in third person (e.g., "Client reported..."). Professional but not overly formal.
-3. Every section must have substantive content — do not leave sections thin.
-4. After the note, evaluate it for insurance audit readiness against these criteria:
-   - Medical necessity documented
-   - Functional impairment noted
-   - Treatment modality specified
-   - Progress toward goals mentioned
-   - Risk assessment present (SI/HI or explicit statement of absence)
-   - Homework or between-session tasks included
-   - Next session focus or frequency stated
-
-RESPOND IN THIS EXACT JSON FORMAT (no markdown, no backticks):
-{
-  "note": "full note text here with section labels like SUBJECTIVE:\\n...",
-  "audit": [
-    { "item": "Medical necessity", "status": "ok", "note": "Clearly documented" },
-    { "item": "Functional impairment", "status": "warn", "note": "Could be more specific" },
-    { "item": "Treatment modality", "status": "ok", "note": "CBT noted" },
-    { "item": "Progress toward goals", "status": "ok", "note": "Documented" },
-    { "item": "Risk assessment", "status": "fail", "note": "SI/HI not addressed" },
-    { "item": "Between-session tasks", "status": "ok", "note": "Homework assigned" },
-    { "item": "Next session plan", "status": "ok", "note": "Follow-up noted" }
-  ]
-}
-
-Statuses: "ok" = present and clear, "warn" = present but could be stronger, "fail" = missing or inadequate.`;
-  }
-
-  // ── Response parser ────────────────────────────────────────────────────────
-  function parseGeminiResponse(raw) {
-    try {
-      // Strip markdown fences (```json ... ``` or ``` ... ```)
-      let cleaned = raw.replace(/^```(?:json)?\s*/i, '').replace(/\s*```\s*$/, '').trim();
-
-      // Find the first { and last } to extract just the JSON object
-      const start = cleaned.indexOf('{');
-      const end = cleaned.lastIndexOf('}');
-      if (start !== -1 && end !== -1) {
-        cleaned = cleaned.slice(start, end + 1);
-      }
-
-      const parsed = JSON.parse(cleaned);
-      return { note: parsed.note || raw, audit: parsed.audit || [] };
-    } catch {
-      // Fallback: treat entire response as note text, no audit
-      return { note: raw, audit: [] };
-    }
-  }
-
-  // ── Render ────────────────────────────────────────────────────────────────
-  function renderOutput(noteText, auditItems, format) {
+  function renderOutput(noteText, auditItems) {
     document.getElementById('emptyState').style.display = 'none';
     document.getElementById('noteOutput').style.display = 'block';
-    document.getElementById('noteHeading').textContent = `${format} Note`;
+    document.getElementById('noteHeading').textContent = currentFormat + ' Note';
     document.getElementById('noteDoc').textContent = noteText;
-
     renderAudit(auditItems);
   }
 
   function renderAudit(items) {
-    const section = document.getElementById('auditSection');
+    var section = document.getElementById('auditSection');
     if (!items || items.length === 0) { section.style.display = 'none'; return; }
-
-    const fails = items.filter(i => i.status === 'fail').length;
-    const warns = items.filter(i => i.status === 'warn').length;
-    const allGood = fails === 0 && warns === 0;
-
-    const headerClass = allGood ? 'audit-header pass' : 'audit-header';
-    const headerIcon = allGood
-      ? `<svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="2"><path d="M2.5 7l3.5 3.5 5.5-6" stroke-linecap="round" stroke-linejoin="round"/></svg>`
-      : `<svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="2"><circle cx="7" cy="7" r="5.5"/><path d="M7 4.5v3M7 9.5v.5" stroke-linecap="round"/></svg>`;
-    const headerText = allGood
-      ? 'Audit Readiness: All checks passed'
-      : `Audit Readiness: ${fails} issue${fails !== 1 ? 's' : ''}, ${warns} warning${warns !== 1 ? 's' : ''}`;
-
-    let html = `<div class="${headerClass}">${headerIcon} ${headerText}</div><div class="audit-items">`;
-
-    items.forEach(item => {
-      html += `
-        <div class="audit-item">
-          <div class="audit-dot ${item.status}"></div>
-          <div class="audit-item-text">
-            <strong>${escHtml(item.item)}</strong>
-            <span>${escHtml(item.note)}</span>
-          </div>
-        </div>`;
+    var fails = items.filter(function(i) { return i.status === 'fail'; }).length;
+    var warns = items.filter(function(i) { return i.status === 'warn'; }).length;
+    var allGood = fails === 0 && warns === 0;
+    var headerClass = allGood ? 'audit-header pass' : 'audit-header';
+    var headerText = allGood ? 'Audit Readiness: All checks passed' : 'Audit Readiness: ' + fails + ' issue(s), ' + warns + ' warning(s)';
+    var html = '<div class="' + headerClass + '">' + headerText + '</div><div class="audit-items">';
+    items.forEach(function(item) {
+      html += '<div class="audit-item"><div class="audit-dot ' + item.status + '"></div><div class="audit-item-text"><strong>' + esc(item.item) + '</strong><span>' + esc(item.note) + '</span></div></div>';
     });
-
     html += '</div>';
     section.innerHTML = html;
     section.style.display = 'block';
   }
 
-  // ── Copy ──────────────────────────────────────────────────────────────────
-  async function copyNote() {
-    try {
-      await navigator.clipboard.writeText(generatedNoteText);
-      const btn = document.getElementById('copyBtn');
+  function copyNote() {
+    navigator.clipboard.writeText(generatedNoteText).then(function() {
+      var btn = document.getElementById('copyBtn');
       btn.classList.add('copied');
-      btn.querySelector('span') && (btn.innerHTML = `<svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="2"><path d="M2.5 7l3.5 3.5 5.5-6" stroke-linecap="round" stroke-linejoin="round"/></svg> Copied!`);
-      setTimeout(() => {
+      btn.textContent = 'Copied!';
+      setTimeout(function() {
         btn.classList.remove('copied');
-        btn.innerHTML = `<svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="2"><rect x="5" y="5" width="8" height="8" rx="1.5"/><path d="M9 5V3a1 1 0 0 0-1-1H3a1 1 0 0 0-1 1v5a1 1 0 0 0 1 1h2" stroke-linecap="round"/></svg> Copy note`;
+        btn.textContent = 'Copy note';
       }, 2200);
-    } catch {
-      showError('Copy failed. Please select and copy the note manually.');
-    }
+    });
   }
 
-  // ── Reset ─────────────────────────────────────────────────────────────────
   function resetAll() {
     document.getElementById('noteOutput').style.display = 'none';
     document.getElementById('emptyState').style.display = 'flex';
@@ -661,18 +221,14 @@ Statuses: "ok" = present and clear, "warn" = present but could be stronger, "fai
     hideError();
   }
 
-  // ── Helpers ───────────────────────────────────────────────────────────────
   function setLoading(on) {
-    const btn = document.getElementById('generateBtn');
-    const spinner = document.getElementById('spinner');
-    const text = document.getElementById('btnText');
-    btn.disabled = on;
-    spinner.style.display = on ? 'block' : 'none';
-    text.textContent = on ? 'Generating…' : 'Generate Clinical Note';
+    document.getElementById('generateBtn').disabled = on;
+    document.getElementById('spinner').style.display = on ? 'block' : 'none';
+    document.getElementById('btnText').textContent = on ? 'Generating...' : 'Generate Clinical Note';
   }
 
   function showError(msg) {
-    const box = document.getElementById('errorBox');
+    var box = document.getElementById('errorBox');
     box.textContent = msg;
     box.style.display = 'block';
   }
@@ -681,10 +237,9 @@ Statuses: "ok" = present and clear, "warn" = present but could be stronger, "fai
     document.getElementById('errorBox').style.display = 'none';
   }
 
-  function escHtml(s) {
+  function esc(s) {
     return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
   }
 </script>
-
 </body>
 </html>
