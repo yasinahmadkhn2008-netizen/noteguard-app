@@ -587,8 +587,16 @@ Statuses: "ok" = present and clear, "warn" = present but could be stronger, "fai
   // ── Response parser ────────────────────────────────────────────────────────
   function parseGeminiResponse(raw) {
     try {
-      // Strip any accidental markdown fences
-      const cleaned = raw.replace(/```json|```/g, '').trim();
+      // Strip markdown fences (```json ... ``` or ``` ... ```)
+      let cleaned = raw.replace(/^```(?:json)?\s*/i, '').replace(/\s*```\s*$/, '').trim();
+
+      // Find the first { and last } to extract just the JSON object
+      const start = cleaned.indexOf('{');
+      const end = cleaned.lastIndexOf('}');
+      if (start !== -1 && end !== -1) {
+        cleaned = cleaned.slice(start, end + 1);
+      }
+
       const parsed = JSON.parse(cleaned);
       return { note: parsed.note || raw, audit: parsed.audit || [] };
     } catch {
