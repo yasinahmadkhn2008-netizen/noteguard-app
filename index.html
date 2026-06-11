@@ -496,36 +496,23 @@
     setLoading(true);
     hideError();
 
-    const prompt = buildPrompt(bullets, currentFormat);
-
     try {
       const response = await fetch('/api/generate', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          contents: [{ parts: [{ text: prompt }] }],
-          generationConfig: {
-            temperature: 0.3,
-            maxOutputTokens: 1200,
-          }
-        })
+        body: JSON.stringify({ bullets, format: currentFormat })
       });
 
+      const data = await response.json();
+
       if (!response.ok) {
-        const err = await response.json();
-        throw new Error(err?.error?.message || `API error ${response.status}`);
+        throw new Error(data?.error || \`API error \${response.status}\`);
       }
 
-      const data = await response.json();
-      const rawText = data?.candidates?.[0]?.content?.parts?.[0]?.text;
+      if (!data.note) throw new Error('No content returned.');
 
-      if (!rawText) throw new Error('No content returned from Gemini.');
-
-      // Parse note and audit JSON out of response
-      const parsed = parseGeminiResponse(rawText);
-      generatedNoteText = parsed.note;
-
-      renderOutput(parsed.note, parsed.audit, currentFormat);
+      generatedNoteText = data.note;
+      renderOutput(data.note, data.audit || [], currentFormat);
 
     } catch (err) {
       showError('Generation failed: ' + err.message);
