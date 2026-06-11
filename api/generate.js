@@ -25,7 +25,7 @@ export default async function handler(req, res) {
     ? 'SOAP format with four sections labeled SUBJECTIVE, OBJECTIVE, ASSESSMENT, PLAN'
     : 'DAP format with three sections labeled DATA, ASSESSMENT, PLAN';
 
-  const prompt = 'You are an expert licensed clinical supervisor. Given these session bullet points, generate a complete clinical note in ' + format + ' format (' + formatInstructions + ').\n\nSESSION BULLET POINTS:\n' + bullets + '\n\nINSTRUCTIONS:\n1. Write in third person (Client reported...). Professional tone.\n2. Every section must have substantive content.\n3. After the note, evaluate for insurance audit readiness:\n   - Medical necessity documented\n   - Functional impairment noted\n   - Treatment modality specified\n   - Progress toward goals mentioned\n   - Risk assessment present (SI/HI or explicit absence)\n   - Between-session tasks included\n   - Next session focus stated\n\nRESPOND WITH ONLY RAW JSON, NO MARKDOWN, NO BACKTICKS:\n{"note":"full note text here with section labels","audit":[{"item":"Medical necessity","status":"ok","note":"explanation"},{"item":"Functional impairment","status":"ok","note":"explanation"},{"item":"Treatment modality","status":"ok","note":"explanation"},{"item":"Progress toward goals","status":"ok","note":"explanation"},{"item":"Risk assessment","status":"ok","note":"explanation"},{"item":"Between-session tasks","status":"ok","note":"explanation"},{"item":"Next session plan","status":"ok","note":"explanation"}]}';
+  const prompt = 'You are an expert licensed clinical supervisor. Given these session bullet points, generate a complete clinical note in ' + format + ' format (' + formatInstructions + ').\n\nSESSION BULLET POINTS:\n' + bullets + '\n\nINSTRUCTIONS:\n1. Write in third person (Client reported...). Professional tone.\n2. Every section must have substantive content.\n3. After the note, evaluate for insurance audit readiness against these 7 criteria:\n   - Medical necessity documented\n   - Functional impairment noted\n   - Treatment modality specified\n   - Progress toward goals mentioned\n   - Risk assessment present (SI/HI or explicit absence)\n   - Between-session tasks included\n   - Next session focus stated\n\nRESPOND WITH ONLY RAW JSON - NO MARKDOWN FORMATTING, NO BACKTICKS, NO ASTERISKS IN THE NOTE TEXT:\n{"note":"SUBJECTIVE:\\nfull subjective section here\\n\\nOBJECTIVE:\\nfull objective section here\\n\\nASSESSMENT:\\nfull assessment section here\\n\\nPLAN:\\nfull plan section here","audit":[{"item":"Medical necessity","status":"ok","note":"explanation"},{"item":"Functional impairment","status":"ok","note":"explanation"},{"item":"Treatment modality","status":"ok","note":"explanation"},{"item":"Progress toward goals","status":"ok","note":"explanation"},{"item":"Risk assessment","status":"ok","note":"explanation"},{"item":"Between-session tasks","status":"warn","note":"explanation"},{"item":"Next session plan","status":"ok","note":"explanation"}]}';
 
   try {
     const geminiRes = await fetch(
@@ -52,17 +52,30 @@ export default async function handler(req, res) {
       return res.status(200).json({ note: 'No content generated. Please try again.', audit: [] });
     }
 
+    // Clean markdown formatting from raw text
+    let cleaned = raw.replace(/```json/g, '').replace(/```/g, '').trim();
+
+    // Extract JSON object
+    const start = cleaned.indexOf('{');
+    const end = cleaned.lastIndexOf('}');
+
     let parsed;
-    try {
-      const start = raw.indexOf('{');
-      const end = raw.lastIndexOf('}');
-      if (start !== -1 && end !== -1) {
-        parsed = JSON.parse(raw.slice(start, end + 1));
-      } else {
-        parsed = { note: raw, audit: [] };
+    if (start !== -1 && end !== -1) {
+      try {
+        parsed = JSON.parse(cleaned.slice(start, end + 1));
+      } catch (e) {
+        parsed = { note: cleaned, audit: [] };
       }
-    } catch (e) {
-      parsed = { note: raw, audit: [] };
+    } else {
+      parsed = { note: cleaned, audit: [] };
+    }
+
+    // Clean any markdown from the note text itself
+    if (parsed.note) {
+      parsed.note = parsed.note
+        .replace(/\*\*/g, '')
+        .replace(/\*/g, '')
+        .replace(/\\n/g, '\n');
     }
 
     return res.status(200).json(parsed);
