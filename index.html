@@ -506,7 +506,7 @@
       const data = await response.json();
 
       if (!response.ok) {
-        throw new Error(data?.error || \`API error \${response.status}\`);
+        throw new Error(data?.error || `API error ${response.status}`);
       }
 
       if (!data.note) throw new Error('No content returned.');
