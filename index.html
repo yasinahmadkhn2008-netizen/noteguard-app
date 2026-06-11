@@ -153,6 +153,10 @@
   function generateNote() {
     var bullets = document.getElementById('bullets').value.trim();
     if (!bullets) { showError('Please enter at least a few session bullet points.'); return; }
+    if (bullets.length < 80 || bullets.split('\n').length < 3) {
+      showError('Please add more detail — at least 3 bullet points covering what the client reported, what you observed, and your plan. Thin input causes the AI to fabricate clinical details, which could put your license at risk.');
+      return;
+    }
     setLoading(true);
     hideError();
 
@@ -165,17 +169,17 @@
     .then(function(data) {
       if (data.error) { showError('Generation failed: ' + (typeof data.error === 'string' ? data.error : JSON.stringify(data.error))); return; }
       if (!data.note) { showError('No content returned. Please try again.'); return; }
-var note = data.note;
-var audit = data.audit || [];
-if (note.trim().startsWith('{')) {
-  try {
-    var inner = JSON.parse(note);
-    note = inner.note || note;
-    audit = inner.audit || audit;
-  } catch(e) {}
-}
-generatedNoteText = note;
-renderOutput(note, audit);
+      var note = data.note;
+      var audit = data.audit || [];
+      if (note.trim().charAt(0) === '{') {
+        try {
+          var inner = JSON.parse(note);
+          note = inner.note || note;
+          audit = inner.audit || audit;
+        } catch(e) {}
+      }
+      generatedNoteText = note;
+      renderOutput(note, audit);
     })
     .catch(function(err) {
       showError('Request failed: ' + err.message);
