@@ -25,7 +25,7 @@ export default async function handler(req, res) {
     ? 'SOAP format with four sections labeled SUBJECTIVE, OBJECTIVE, ASSESSMENT, PLAN'
     : 'DAP format with three sections labeled DATA, ASSESSMENT, PLAN';
 
-  const prompt = 'You are an expert licensed clinical supervisor. Given these session bullet points, generate a complete clinical note in ' + format + ' format (' + formatInstructions + ').\n\nSESSION BULLET POINTS:\n' + bullets + '\n\nINSTRUCTIONS:\n1. Write in third person (Client reported...). Professional tone.\n2. Every section must have substantive content.\n3. After the note, evaluate for insurance audit readiness against these 7 criteria:\n   - Medical necessity documented\n   - Functional impairment noted\n   - Treatment modality specified\n   - Progress toward goals mentioned\n   - Risk assessment present (SI/HI or explicit absence)\n   - Between-session tasks included\n   - Next session focus stated\n\nRESPOND WITH ONLY RAW JSON - NO MARKDOWN FORMATTING, NO BACKTICKS, NO ASTERISKS IN THE NOTE TEXT:\n{"note":"SUBJECTIVE:\\nfull subjective section here\\n\\nOBJECTIVE:\\nfull objective section here\\n\\nASSESSMENT:\\nfull assessment section here\\n\\nPLAN:\\nfull plan section here","audit":[{"item":"Medical necessity","status":"ok","note":"explanation"},{"item":"Functional impairment","status":"ok","note":"explanation"},{"item":"Treatment modality","status":"ok","note":"explanation"},{"item":"Progress toward goals","status":"ok","note":"explanation"},{"item":"Risk assessment","status":"ok","note":"explanation"},{"item":"Between-session tasks","status":"warn","note":"explanation"},{"item":"Next session plan","status":"ok","note":"explanation"}]}';
+  const prompt = 'You are an expert licensed clinical supervisor. Given these session bullet points, generate a complete clinical note in ' + format + ' format (' + formatInstructions + ').\n\nSESSION BULLET POINTS:\n' + bullets + '\n\nINSTRUCTIONS:\n1. Write in third person (Client reported...). Professional tone.\n2. Every section must have substantive content.\n3. Keep each section concise (3-5 sentences) so the full response fits within the token limit.\n4. After the note, evaluate for insurance audit readiness against these 7 criteria:\n   - Medical necessity documented\n   - Functional impairment noted\n   - Treatment modality specified\n   - Progress toward goals mentioned\n   - Risk assessment present (SI/HI or explicit absence)\n   - Between-session tasks included\n   - Next session focus stated\n\nRESPOND WITH ONLY RAW JSON - NO MARKDOWN FORMATTING, NO BACKTICKS, NO ASTERISKS IN THE NOTE TEXT. The audit array MUST always be included and complete, even if it means keeping the note sections brief:\n{"note":"SUBJECTIVE:\\nfull subjective section here\\n\\nOBJECTIVE:\\nfull objective section here\\n\\nASSESSMENT:\\nfull assessment section here\\n\\nPLAN:\\nfull plan section here","audit":[{"item":"Medical necessity","status":"ok","note":"explanation"},{"item":"Functional impairment","status":"ok","note":"explanation"},{"item":"Treatment modality","status":"ok","note":"explanation"},{"item":"Progress toward goals","status":"ok","note":"explanation"},{"item":"Risk assessment","status":"ok","note":"explanation"},{"item":"Between-session tasks","status":"warn","note":"explanation"},{"item":"Next session plan","status":"ok","note":"explanation"}]}';
 
   try {
     const geminiRes = await fetch(
@@ -35,7 +35,7 @@ export default async function handler(req, res) {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           contents: [{ parts: [{ text: prompt }] }],
-          generationConfig: { temperature: 0.3, maxOutputTokens: 1500 }
+          generationConfig: { temperature: 0.3, maxOutputTokens: 3000 }
         })
       }
     );
@@ -46,7 +46,14 @@ export default async function handler(req, res) {
       return res.status(geminiRes.status).json({ error: data.error ? data.error.message : 'Gemini API error' });
     }
 
-    const raw = (data.candidates && data.candidates[0] && data.candidates[0].content && data.candidates[0].content.parts && data.candidates[0].content.parts[0] && data.candidates[0].content.parts[0].text) ? data.candidates[0].content.parts[0].text : '';
+    const candidate = data.candidates && data.candidates[0];
+    const raw = (candidate && candidate.content && candidate.content.parts && candidate.content.parts[0] && candidate.content.parts[0].text) ? candidate.content.parts[0].text : '';
+    const finishReason = candidate ? candidate.finishReason : 'UNKNOWN';
+
+    // Debug logging - visible in Vercel function logs
+    console.log('finishReason:', finishReason);
+    console.log('raw length:', raw.length);
+    console.log('raw tail:', raw.slice(-200));
 
     if (!raw) {
       return res.status(200).json({ note: 'No content generated. Please try again.', audit: [] });
@@ -60,14 +67,35 @@ export default async function handler(req, res) {
     const end = cleaned.lastIndexOf('}');
 
     let parsed;
+    let parseFailed = false;
+
     if (start !== -1 && end !== -1) {
       try {
         parsed = JSON.parse(cleaned.slice(start, end + 1));
       } catch (e) {
-        parsed = { note: cleaned, audit: [] };
+        parseFailed = true;
       }
     } else {
-      parsed = { note: cleaned, audit: [] };
+      parseFailed = true;
+    }
+
+    if (parseFailed) {
+      // Likely a truncated response (hit maxOutputTokens before JSON closed).
+      // Try to salvage at least the note text via regex instead of dumping raw JSON.
+      const noteMatch = cleaned.match(/"note"\s*:\s*"([\s\S]*?)(?:"\s*,\s*"audit"|$)/);
+      let salvagedNote = noteMatch ? noteMatch[1] : cleaned;
+
+      // Unescape common JSON escapes
+      salvagedNote = salvagedNote
+        .replace(/\\n/g, '\n')
+        .replace(/\\"/g, '"')
+        .replace(/\\\\/g, '\\');
+
+      parsed = {
+        note: salvagedNote + '\n\n[Note: response was cut off before completing. Try shortening your input or click Generate again.]',
+        audit: [],
+        truncated: true
+      };
     }
 
     // Clean any markdown from the note text itself
