@@ -57,15 +57,14 @@
     .action-btn svg { width: 13px; height: 13px; flex-shrink: 0; }
     .note-doc { background: var(--surface); border: 1px solid var(--border); border-left: 3px solid var(--teal); border-radius: var(--radius); padding: 20px 22px; font-family: Georgia, serif; font-size: 14px; line-height: 1.8; color: #2D3748; white-space: pre-wrap; margin-bottom: 16px; box-shadow: var(--shadow); }
     .audit-section { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); overflow: hidden; box-shadow: var(--shadow); }
-    .audit-header { padding: 11px 16px; background: var(--amber-light); border-bottom: 1px solid #FDE68A; font-size: 12px; font-weight: 600; color: #92400E; display: flex; align-items: center; gap: 7px; }
+    .audit-header { padding: 11px 16px; background: var(--bg); border-bottom: 1px solid var(--border); font-size: 12px; font-weight: 600; color: var(--navy-muted); display: flex; align-items: center; gap: 7px; }
     .audit-header svg { width: 14px; height: 14px; flex-shrink: 0; }
-    .audit-header.pass { background: var(--green-light); border-bottom-color: #BBF7D0; color: #14532D; }
+    .audit-header.all-present { background: var(--green-light); border-bottom-color: #BBF7D0; color: #14532D; }
     .audit-items { padding: 10px 0; }
     .audit-item { display: flex; align-items: flex-start; gap: 10px; padding: 7px 16px; font-size: 13px; }
     .audit-dot { width: 8px; height: 8px; border-radius: 50%; margin-top: 5px; flex-shrink: 0; }
     .audit-dot.ok { background: var(--green); }
     .audit-dot.warn { background: var(--amber); }
-    .audit-dot.fail { background: var(--red); }
     .audit-item-text strong { display: block; font-size: 12px; font-weight: 600; color: var(--navy); }
     .audit-item-text span { font-size: 11.5px; color: var(--navy-muted); }
     .error-box { background: var(--red-light); border: 1px solid #FCA5A5; border-radius: var(--radius); padding: 12px 16px; font-size: 13px; color: var(--red); display: none; margin-top: 14px; }
@@ -310,14 +309,16 @@
   function renderAudit(items) {
     var section = document.getElementById('auditSection');
     if (!items || items.length === 0) { section.style.display = 'none'; return; }
-    var fails = items.filter(function(i) { return i.status === 'fail'; }).length;
-    var warns = items.filter(function(i) { return i.status === 'warn'; }).length;
-    var allGood = fails === 0 && warns === 0;
-    var headerClass = allGood ? 'audit-header pass' : 'audit-header';
-    var headerText = allGood ? 'Audit Readiness: All checks passed' : 'Audit Readiness: ' + fails + ' issue(s), ' + warns + ' warning(s)';
+    var missing = items.filter(function(i) { return i.status === 'warn'; }).length;
+    var allPresent = missing === 0;
+    var headerClass = allPresent ? 'audit-header all-present' : 'audit-header';
+    var headerText = allPresent
+      ? 'Documentation checklist — looks complete'
+      : 'Documentation checklist — ' + missing + ' item(s) you may want to add';
     var html = '<div class="' + headerClass + '">' + headerText + '</div><div class="audit-items">';
     items.forEach(function(item) {
-      html += '<div class="audit-item"><div class="audit-dot ' + item.status + '"></div><div class="audit-item-text"><strong>' + esc(item.item) + '</strong><span>' + esc(item.note) + '</span></div></div>';
+      var status = item.status === 'ok' ? 'ok' : 'warn';
+      html += '<div class="audit-item"><div class="audit-dot ' + status + '"></div><div class="audit-item-text"><strong>' + esc(item.item) + '</strong><span>' + esc(item.note) + '</span></div></div>';
     });
     html += '</div>';
     section.innerHTML = html;
