@@ -70,10 +70,69 @@
     .audit-item-text span { font-size: 11.5px; color: var(--navy-muted); }
     .error-box { background: var(--red-light); border: 1px solid #FCA5A5; border-radius: var(--radius); padding: 12px 16px; font-size: 13px; color: var(--red); display: none; margin-top: 14px; }
     @media (max-width: 768px) { .workspace { grid-template-columns: 1fr; height: auto; } .panel-left { border-right: none; border-bottom: 1px solid var(--border); } }
+
+    /* --- Access gate styles --- */
+    .gate-overlay {
+      position: fixed; inset: 0; background: var(--navy);
+      display: flex; align-items: center; justify-content: center;
+      z-index: 1000; padding: 20px;
+    }
+    .gate-card {
+      background: var(--surface); border-radius: 12px; padding: 36px 32px;
+      max-width: 380px; width: 100%; text-align: center;
+      box-shadow: 0 10px 40px rgba(0,0,0,0.25);
+    }
+    .gate-logo-mark {
+      width: 44px; height: 44px; background: var(--teal); border-radius: 10px;
+      display: flex; align-items: center; justify-content: center;
+      margin: 0 auto 16px;
+    }
+    .gate-logo-mark svg { width: 24px; height: 24px; fill: none; stroke: #fff; stroke-width: 2; }
+    .gate-card h1 { font-size: 18px; font-weight: 600; color: var(--navy); margin-bottom: 6px; }
+    .gate-card p.gate-sub { font-size: 13px; color: var(--navy-muted); margin-bottom: 22px; line-height: 1.6; }
+    .gate-input {
+      width: 100%; padding: 11px 14px; border: 1.5px solid var(--border);
+      border-radius: var(--radius); font-family: inherit; font-size: 14px;
+      text-align: center; letter-spacing: 0.05em; outline: none;
+      transition: border-color 0.15s; margin-bottom: 12px;
+      text-transform: uppercase;
+    }
+    .gate-input:focus { border-color: var(--teal); }
+    .gate-btn {
+      width: 100%; padding: 12px; background: var(--navy); color: #fff;
+      border: none; border-radius: var(--radius); font-family: inherit;
+      font-size: 14px; font-weight: 600; cursor: pointer; transition: background 0.15s;
+    }
+    .gate-btn:hover { background: #263f6d; }
+    .gate-error {
+      display: none; background: var(--red-light); border: 1px solid #FCA5A5;
+      border-radius: var(--radius); padding: 10px 14px; font-size: 12.5px;
+      color: var(--red); margin-top: 12px; line-height: 1.5; text-align: left;
+    }
+    .gate-footer {
+      font-size: 11.5px; color: #A0AEC0; margin-top: 18px; line-height: 1.5;
+    }
+    .app-hidden { display: none !important; }
   </style>
 </head>
 <body>
 
+<!-- Access gate overlay -->
+<div class="gate-overlay" id="gateOverlay">
+  <div class="gate-card">
+    <div class="gate-logo-mark">
+      <svg viewBox="0 0 16 16"><path d="M4 2h8a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2z" stroke-linecap="round"/><path d="M5 6h6M5 8.5h4M5 11h5" stroke-linecap="round"/></svg>
+    </div>
+    <h1>Founding Member Access</h1>
+    <p class="gate-sub">NoteGuard is currently invite-only while we onboard our first founding members. Enter your access code to continue.</p>
+    <input type="text" id="gateCodeInput" class="gate-input" placeholder="ACCESS CODE" autocomplete="off" />
+    <button class="gate-btn" onclick="checkGateCode()">Continue</button>
+    <div class="gate-error" id="gateError"></div>
+    <p class="gate-footer">Don't have a code yet? DM u/Inner-Nectarine9957 on Reddit and we'll get you set up.</p>
+  </div>
+</div>
+
+<div id="appRoot" class="app-hidden">
 <header>
   <div class="logo">
     <div class="logo-mark">
@@ -139,8 +198,59 @@
     </div>
   </div>
 </div>
+</div>
 
 <script>
+  // --- Access gate logic ---
+  // Map of valid access codes -> batch label (for your own tracking; not shown to user)
+  var VALID_CODES = {
+    'FOUNDER01': 'reddit-batch-1',
+    'FOUNDER02': 'reddit-batch-2',
+    'FOUNDER03': 'reddit-batch-3'
+  };
+  var GATE_STORAGE_KEY = 'noteguard_unlocked';
+
+  function unlockApp() {
+    document.getElementById('gateOverlay').style.display = 'none';
+    document.getElementById('appRoot').classList.remove('app-hidden');
+  }
+
+  function checkGateCode() {
+    var input = document.getElementById('gateCodeInput');
+    var errBox = document.getElementById('gateError');
+    var code = input.value.trim().toUpperCase();
+
+    if (VALID_CODES.hasOwnProperty(code)) {
+      try {
+        localStorage.setItem(GATE_STORAGE_KEY, code);
+      } catch (e) {}
+      errBox.style.display = 'none';
+      unlockApp();
+    } else {
+      errBox.textContent = "That code isn't valid — DM u/Inner-Nectarine9957 on Reddit for access, we'll get you sorted.";
+      errBox.style.display = 'block';
+    }
+  }
+
+  // Allow Enter key to submit the gate
+  document.addEventListener('DOMContentLoaded', function() {
+    var input = document.getElementById('gateCodeInput');
+    if (input) {
+      input.addEventListener('keydown', function(e) {
+        if (e.key === 'Enter') checkGateCode();
+      });
+    }
+
+    // Check if already unlocked
+    try {
+      var stored = localStorage.getItem(GATE_STORAGE_KEY);
+      if (stored && VALID_CODES.hasOwnProperty(stored)) {
+        unlockApp();
+      }
+    } catch (e) {}
+  });
+
+  // --- App logic ---
   var currentFormat = 'SOAP';
   var generatedNoteText = '';
 
