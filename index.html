@@ -276,6 +276,10 @@
     })
     .then(function(res) { return res.json(); })
     .then(function(data) {
+      if (data.error === 'not_clinical') {
+        showError("This doesn't look like session notes. Try entering bullet points about what the client reported, what you observed during the session, and your plan going forward.");
+        return;
+      }
       if (data.error) { showError('Generation failed: ' + (typeof data.error === 'string' ? data.error : JSON.stringify(data.error))); return; }
       if (!data.note) { showError('No content returned. Please try again.'); return; }
       var note = data.note;
