@@ -40,6 +40,7 @@
     .bullets-area:focus { border-color: var(--teal); }
     .bullets-area::placeholder { color: #A0AEC0; }
     .hint { font-size: 11.5px; color: #A0AEC0; margin-top: 6px; }
+    .disclaimer-note { font-size: 11px; color: #A0AEC0; margin-top: 10px; line-height: 1.5; text-align: center; }
     .generate-btn { width: 100%; margin-top: 18px; padding: 13px; background: var(--navy); color: #fff; border: none; border-radius: var(--radius); font-family: inherit; font-size: 14px; font-weight: 600; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; transition: background 0.15s; }
     .generate-btn:hover:not(:disabled) { background: #263f6d; }
     .generate-btn:disabled { opacity: 0.6; cursor: not-allowed; }
@@ -67,6 +68,7 @@
     .audit-dot.warn { background: var(--amber); }
     .audit-item-text strong { display: block; font-size: 12px; font-weight: 600; color: var(--navy); }
     .audit-item-text span { font-size: 11.5px; color: var(--navy-muted); }
+    .checklist-disclaimer { font-size: 10.5px; color: #A0AEC0; padding: 10px 16px; border-top: 1px solid var(--border); line-height: 1.5; }
     .error-box { background: var(--red-light); border: 1px solid #FCA5A5; border-radius: var(--radius); padding: 12px 16px; font-size: 13px; color: var(--red); display: none; margin-top: 14px; }
     @media (max-width: 768px) { .workspace { grid-template-columns: 1fr; height: auto; } .panel-left { border-right: none; border-bottom: 1px solid var(--border); } }
 
@@ -170,6 +172,7 @@
       <div class="spinner" id="spinner"></div>
       <span id="btnText">Generate Clinical Note</span>
     </button>
+    <p class="disclaimer-note">AI-generated draft — review and edit before adding to your client records. NoteGuard does not provide clinical recommendations or diagnoses.</p>
   </div>
 
   <div class="panel" id="outputPanel">
@@ -325,6 +328,7 @@
       html += '<div class="audit-item"><div class="audit-dot ' + status + '"></div><div class="audit-item-text"><strong>' + esc(item.item) + '</strong><span>' + esc(item.note) + '</span></div></div>';
     });
     html += '</div>';
+    html += '<div class="checklist-disclaimer">This checklist reflects common documentation elements and is not a guarantee of audit compliance or insurance approval. Requirements vary by payer and jurisdiction.</div>';
     section.innerHTML = html;
     section.style.display = 'block';
   }
